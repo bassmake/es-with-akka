@@ -1,3 +1,3 @@
 # Event Sourcing with akka-persistence
 
-see 
+see https://gitpitch.com/bassmake/es-with-akka
