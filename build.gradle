@@ -26,7 +26,6 @@ repositories {
 ext {
   scalaVersion = '2.12'
   akkaVersion = '2.5.6'
-  akkaHttpVersion = '10.0.10'
   dbUrl = 'jdbc:h2:file:./build/es'
   dbUser = 'sa'
 }
@@ -48,7 +47,6 @@ dependencies {
   // logging
   compile("com.typesafe.akka:akka-slf4j_$scalaVersion:$akkaVersion")
   compile("ch.qos.logback:logback-classic:1.2.3")
-  compile("org.fusesource.jansi:jansi:1.16")  // for windows
 
   // persistence
   compile("com.typesafe.akka:akka-persistence_$scalaVersion:$akkaVersion")
