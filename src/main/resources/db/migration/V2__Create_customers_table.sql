@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS PUBLIC."customers";
+
+CREATE TABLE IF NOT EXISTS PUBLIC."customers" (
+  "uuid" UUID PRIMARY KEY,
+  "email" VARCHAR(255) NOT NULL,
+  "created_at" TIMESTAMP NOT NULL,
+  "updated_at" TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS PUBLIC."registrations" (
+  "email" VARCHAR(255) NOT NULL PRIMARY KEY,
+  "created_at" TIMESTAMP NOT NULL
+);
