@@ -1,0 +1,3 @@
+dependencies {
+  compile("org.scalatest:scalatest_$scalaVersion:3.0.4")
+}

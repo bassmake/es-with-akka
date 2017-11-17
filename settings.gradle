@@ -1,2 +1,4 @@
 rootProject.name = 'es-with-akka'
 
+include 'shared'
+include '01-akka-actors'
