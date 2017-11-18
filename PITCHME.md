@@ -3,12 +3,10 @@
 
 ---
 @title[Akka]
-### Akka
+![Akka logo](https://akka.io/resources/images/akka_full_color.svg)
 
 * https://akka.io/
 * Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala
-
-![Akka logo](https://akka.io/resources/images/akka_full_color.svg)
 
 ---
 @title[Actors]
