@@ -8,13 +8,12 @@
 * Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala
 
 ---
-@title[Actor-model]
+@title[Actor model]
 ### Actor model
 - Created by Carl Hewitt in 1973
 - Inspired by physics
 - Everything is an actor
-- Erlang
-- Elixir
+- Erlang/Elixir
 - Akka
 
 +++
@@ -26,7 +25,7 @@ Actor is computational entity with state that based on received message can
 - designate the behavior (state) to be used for the next message it receives |
 
 ---
-@title[Akka-actors]
+@title[Akka actors]
 ### Akka actors
 ```scala
 class SimpleActor extends Actor {
@@ -69,6 +68,10 @@ val future: Future[Any] = actor ? "get-state"
 @[6-7](`ask` for state, needs timeout)
 
 ---
+@title[Coding part 1]
+### Coding part 1
+
+---
 @title[CQRS]
 ### CQRS
 
@@ -77,19 +80,27 @@ val future: Future[Any] = actor ? "get-state"
 ### Event Sourcing
 
 ---
-@title[Akka-persistence]
+@title[Akka persistence]
 ### Akka persistence
+
+---
+@title[Coding part 2]
+### Coding part 2
 
 ---
 @title[Projections]
 ### Projections
 
 ---
-@title[Akka-persistence-query]
+@title[Akka persistence query]
 ### Akka persistence query
 
 ---
-@title[Akka-serialization]
+@title[Coding part 3]
+### Coding part 3
+
+---
+@title[Akka serialization]
 ### About Akka serialization
 
 ---
