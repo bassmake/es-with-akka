@@ -1,3 +1,4 @@
 dependencies {
-  testCompile project(':shared')
+  compile project(':domain')
+  testCompile project(':test-support')
 }

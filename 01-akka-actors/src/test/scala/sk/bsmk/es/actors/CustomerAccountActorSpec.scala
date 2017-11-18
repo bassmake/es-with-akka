@@ -1,0 +1,53 @@
+package sk.bsmk.es.actors
+
+import akka.actor.ActorSystem
+import org.scalatest.{Matchers, WordSpec}
+import akka.pattern.ask
+import akka.util.Timeout
+import org.slf4j.LoggerFactory
+import sk.bsmk.customer.{CustomerAccount, Voucher}
+import sk.bsmk.customer.points.AddPointsToAccount
+import sk.bsmk.customer.vouchers.{BuyVoucher, VoucherRegistry}
+import sk.bsmk.es.actors.CustomerAccountActor.{LogState, SendState}
+
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+
+class CustomerAccountActorSpec extends WordSpec with Matchers {
+
+  private val log = LoggerFactory.getLogger(this.getClass)
+
+  "Customer account actor" when {
+
+    "points are added and voucher is bought" should {
+
+      val actorSystem = ActorSystem("01")
+
+      val voucher = Voucher("1", 100, 5)
+      VoucherRegistry.add(voucher)
+
+      val actor = actorSystem.actorOf(CustomerAccountActor.props("alice"), "customer-1")
+
+      actor ! AddPointsToAccount(300)
+      actor ! BuyVoucher(voucher.code)
+
+      "log correct state" in {
+        actor ! LogState
+      }
+
+      "send correct state" in {
+        implicit val timeout: Timeout = Timeout(5.seconds)
+
+        val responseAny: Future[Any] = actor ? SendState
+
+        val response: Future[CustomerAccount] = responseAny.map(_.asInstanceOf[CustomerAccount])
+
+        val value = Await.result(response, timeout.duration)
+        log.info("Received {}", value)
+        pprint.pprintln(value)
+      }
+    }
+  }
+
+}

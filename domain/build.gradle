@@ -1,0 +1,3 @@
+dependencies {
+  compile("com.lihaoyi:pprint_2.12:0.5.3")
+}
