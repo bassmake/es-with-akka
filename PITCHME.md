@@ -13,6 +13,9 @@
 - Created by Carl Hewitt in 1973
 - Inspired by physics
 - Everything is an actor
+- Erlang
+- Elixir
+- Akka
 
 +++
 @title[Actors]
@@ -60,10 +63,10 @@ val future: Future[Any] = actor ? "get-state"
 ```
 
 @[1](create ActorSystem)
-@[5-9](create actor, props is like template)
+@[2](create actor, props is like template)
 @[4](`tell` to add one, returns Unit)
 @[5](`tell` to add two, returns Unit)
-@[5-6](`ask` for sate, needs timeout)
+@[6-7](`ask` for state, needs timeout)
 
 ---
 @title[CQRS]
