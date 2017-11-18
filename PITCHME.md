@@ -17,10 +17,10 @@
 +++
 @title[Actors]
 ### Actors
-Actor is computational entity with state that based on received message ca
-* send a finite number of messages to other actors
-* create a finite number of new actors
-* designate the behavior (state) to be used for the next message it receives
+Actor is computational entity with state that based on received message can
+* send a finite number of messages to other actors |
+* create a finite number of new actors |
+* designate the behavior (state) to be used for the next message it receives |
 
 ---
 @title[Akka-actors]
