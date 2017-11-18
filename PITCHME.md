@@ -7,6 +7,10 @@
 
 ---
 @title[Actors]
+# Actors
+
++++
+@title[Akka-actors]
 # Akka actors
  
 +++
