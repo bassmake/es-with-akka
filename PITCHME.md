@@ -25,7 +25,20 @@ Actor is computational entity with state that based on received message can
 ---
 @title[Akka-actors]
 ### Akka actors
- 
+```scala
+class SimpleActor extends Actor {
+
+  var state = Set[Int]
+
+  override def receive = {
+    case "add-one" ⇒ state = state + 1
+    case "add-two" ⇒ state = state + 2
+    case "get-state" ⇒ sender() ! state
+  }
+
+}
+```
+
 +++
 @title[Tell]
 ### Tell
@@ -59,8 +72,8 @@ Actor is computational entity with state that based on received message can
 ### About Akka serialization
 
 ---
-@Title[Thanks]
+@title[Thanks]
 ### Thank you
-links:
+useful links:
 * https://akka.io/
 * https://en.wikipedia.org/wiki/Actor_model
