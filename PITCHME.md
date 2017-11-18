@@ -2,17 +2,37 @@
 # Event Sourcing with akka-persistence
 
 ---
-@title[2]
-# Slide 2
+@Title[Futures]
+# Just Futures
+
+---
+@title[Actors]
+# Akka actors
  
 +++
-@title[2-a]
-# Slide 2 a
+@title[Tell]
+# Tell
 
 +++
-@title[2-b]
-# Slide 2 b
+@title[Ask]
+# Ask
  
 ---
-@title[3]
-# Slide 3
+@title[CQRS]
+# CQRS
+
+---
+@title[Event Sourcing]
+# Event Sourcing
+
+---
+@title[Akka-persistence]
+# Akka persistence
+
+---
+@title[Projections]
+# Projections
+
+---
+@title[Akka-persistence-query]
+# Akka persistence query
