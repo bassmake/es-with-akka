@@ -40,3 +40,7 @@
 ---
 @title[Akka-persistence-query]
 # Akka persistence query
+
+---
+@title[Akka-serialization]
+# About Akka serialization
