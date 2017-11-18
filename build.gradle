@@ -32,7 +32,7 @@ subprojects {
   ext {
     scalaVersion = '2.12'
     akkaVersion = '2.5.6'
-    dbUrl = 'jdbc:h2:file:./build/es'
+    dbUrl = "jdbc:h2:file:$buildDir/es-db"
     dbUser = 'sa'
   }
 
@@ -44,6 +44,14 @@ subprojects {
     // logging
     compile("com.typesafe.akka:akka-slf4j_$scalaVersion:$akkaVersion")
     compile("ch.qos.logback:logback-classic:1.2.3")
+
+    // persistence
+    jooqRuntime h2Dependency
+    compile("com.typesafe.akka:akka-persistence_$scalaVersion:$akkaVersion")
+    compile("com.typesafe.akka:akka-persistence-query_$scalaVersion:$akkaVersion")
+    compile("com.github.dnvriend:akka-persistence-jdbc_$scalaVersion:3.0.1")
+    compile(h2Dependency)
+    compile("org.jooq:jooq")
 
     // for gradle scalatest plugin
     testRuntime 'org.pegdown:pegdown:1.6.0'
@@ -58,51 +66,52 @@ subprojects {
   tasks.withType(ScalaCompile) {
     dependsOn 'spotlessApply'
   }
+
+  clean {
+    delete "$projectDir/out"
+    delete "$projectDir/src/main/java/sk/bsmk/es/persistence/model/"
+  }
+
+  flyway {
+    url = dbUrl
+    user = dbUser
+  }
+
+  jooq {
+    version = '3.10.1'
+    edition = 'OSS'
+    es(sourceSets.main) {
+      jdbc {
+        url = dbUrl
+        user = dbUser
+      }
+      generator {
+        database {
+          inputSchema = 'PUBLIC'
+          excludes = 'JOURNAL|SNAPSHOT|SCHEMA_VERSION'
+        }
+        generate {
+          relations = false
+          deprecated = false
+          records = true
+          immutablePojos = false
+          fluentSetters = false
+          javaTimeTypes = true
+        }
+        target {
+          directory = 'src/main/java'
+          packageName = 'sk.bsmk.es.persistence.model'
+        }
+      }
+    }
+  }
+
+  cleanGenerateEsJooqSchemaSource.enabled = false
+
+  generateEsJooqSchemaSource.dependsOn flywayMigrate
+  generateEsJooqSchemaSource.outputs.upToDateWhen { false }
+
 }
-
-//clean {
-//  delete "$projectDir/out"
-//  delete "$projectDir/src/main/java/sk/bsmk/es/persistence/model/"
-//}
-
-//flyway {
-//  url = dbUrl
-//  user = dbUser
-//}
-//
-//jooq {
-//  version = '3.10.1'
-//  edition = 'OSS'
-//  es(sourceSets.main) {
-//    jdbc {
-//      url = dbUrl
-//      user = dbUser
-//    }
-//    generator {
-//      database {
-//        inputSchema = 'PUBLIC'
-//        excludes = 'JOURNAL|SNAPSHOT|SCHEMA_VERSION'
-//      }
-//      generate {
-//        relations = false
-//        deprecated = false
-//        records = true
-//        immutablePojos = false
-//        fluentSetters = false
-//        javaTimeTypes = true
-//      }
-//      target {
-//        directory = 'src/main/java'
-//        packageName = 'sk.bsmk.es.persistence.model'
-//      }
-//    }
-//  }
-//}
-//
-//cleanGenerateEsJooqSchemaSource.enabled = false
-//
-//generateEsJooqSchemaSource.dependsOn flywayMigrate
-//generateEsJooqSchemaSource.outputs.upToDateWhen { false }
 
 task wrapper(type: Wrapper) {
   gradleVersion = '4.3.1'
