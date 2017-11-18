@@ -39,6 +39,13 @@ class SimpleActor extends Actor {
 }
 ```
 
+@[1,11](Extend actor trait)
+@[5-9](Override receieve method)
+@[3](Some internal state)
+@[6](adds 1 to state)
+@[7](adds 2 to state)
+@[8](sends state to sender (ask pattern))
+
 +++
 @title[Tell]
 ### Tell
