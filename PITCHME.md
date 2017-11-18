@@ -74,14 +74,21 @@ val future: Future[Any] = actor ? "get-state"
 ---
 @title[CQRS]
 ### CQRS
+- Command Query Responsibility Segregation
+- Different model is used for update and for read
+- Better performance as read models can be optimized independently
+- Harder to keep data consistent
+- Adds complexity
 
 ---
 @title[Event Sourcing]
 ### Event Sourcing
+- TODO
 
 ---
 @title[Akka persistence]
 ### Akka persistence
+- TODO
 
 ---
 @title[Coding part 2]
@@ -107,5 +114,8 @@ val future: Future[Any] = actor ? "get-state"
 @title[Thanks]
 ### Thank you
 useful links:
-* https://akka.io/
-* https://en.wikipedia.org/wiki/Actor_model
+- https://akka.io/
+- https://en.wikipedia.org/wiki/Actor_model
+- https://martinfowler.com/bliki/CQRS.html
+- https://martinfowler.com/eaaDev/EventSourcing.html
+
