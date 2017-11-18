@@ -2,7 +2,7 @@
 # Event Sourcing with akka-persistence
 
 ---
-@Title[Futures]
+@title[Futures]
 # Just Futures
 
 ---
