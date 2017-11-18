@@ -5,9 +5,9 @@ import org.scalatest.{Matchers, WordSpec}
 import akka.pattern.ask
 import akka.util.Timeout
 import org.slf4j.LoggerFactory
-import sk.bsmk.customer.{CustomerAccount, Voucher}
+import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.points.AddPointsToAccount
-import sk.bsmk.customer.vouchers.{BuyVoucher, VoucherRegistry}
+import sk.bsmk.customer.vouchers.{BuyVoucher, Voucher, VoucherRegistry}
 import sk.bsmk.es.actors.CustomerAccountActor.{LogState, SendState}
 
 import scala.concurrent.duration._

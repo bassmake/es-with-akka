@@ -1,5 +1,7 @@
 package sk.bsmk.customer
 
+import sk.bsmk.customer.vouchers.Voucher
+
 final case class CustomerAccount(username: String, pointBalance: Int = 0, vouchers: Set[Voucher] = Set.empty) {
 
   def addPoints(points: Int): CustomerAccount = {

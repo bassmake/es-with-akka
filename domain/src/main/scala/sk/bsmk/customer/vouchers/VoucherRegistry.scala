@@ -1,7 +1,5 @@
 package sk.bsmk.customer.vouchers
 
-import sk.bsmk.customer.Voucher
-
 import scala.collection.mutable
 
 object VoucherRegistry {
