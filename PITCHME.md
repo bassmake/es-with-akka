@@ -81,9 +81,14 @@ val future: Future[Any] = actor ? "get-state"
 - Adds complexity
 
 ---
-@title[Event Sourcing]
+@title[Event sourcing]
 ### Event Sourcing
-- TODO
+- Every change is stored as an event
+- Events are consumed asynchronously
+- Easy to create new read models
+- Data for audit out of the box
+- Projections needed
+- Higher complexity
 
 ---
 @title[Akka persistence]
