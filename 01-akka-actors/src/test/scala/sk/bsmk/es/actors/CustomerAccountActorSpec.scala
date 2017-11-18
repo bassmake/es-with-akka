@@ -43,9 +43,14 @@ class CustomerAccountActorSpec extends WordSpec with Matchers {
 
         val response: Future[CustomerAccount] = responseAny.map(_.asInstanceOf[CustomerAccount])
 
-        val value = Await.result(response, timeout.duration)
-        log.info("Received {}", value)
-        pprint.pprintln(value)
+        val account = Await.result(response, timeout.duration)
+        log.info("Received {}", account)
+        pprint.pprintln(account)
+
+        account.username shouldBe "alice"
+        account.pointBalance shouldBe 200
+        account.vouchers should have size 1
+
       }
     }
   }
