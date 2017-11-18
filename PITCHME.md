@@ -47,13 +47,24 @@ class SimpleActor extends Actor {
 @[8](sends state to sender (ask pattern))
 
 +++
-@title[Tell]
-### Tell
+@title[Creation and usage]
+### Creation and usage
+```scala
+val system = ActorSystem("name")
+val actor = system.actorOf(Props[SimpleActor])
 
-+++
-@title[Ask]
-### Ask
- 
+actor ! "add-one"
+actor ! "add-two"
+implicit val timeout = Timeout(5.seconds)
+val future: Future[Any] = actor ? "get-state" 
+```
+
+@[1](create ActorSystem)
+@[5-9](create actor, props is like template)
+@[4](`tell` to add one, returns Unit)
+@[5](`tell` to add two, returns Unit)
+@[5-6](`ask` for sate, needs timeout)
+
 ---
 @title[CQRS]
 ### CQRS
