@@ -1,4 +1,4 @@
 dependencies {
-  compile project(':domain')
+  compile project(':02-akka-persistence')
   testCompile project(':test-support')
 }
