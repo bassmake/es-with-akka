@@ -16,7 +16,7 @@ class CustomerAccountSpec extends WordSpec with Matchers {
 
   "Customer account" when {
 
-    "hello message is sent" should {
+    "hello message is sent using tell" should {
 
       "log hello" in {
 

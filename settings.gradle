@@ -2,3 +2,5 @@ rootProject.name = 'es-with-akka'
 
 include 'shared'
 include '01-akka-actors'
+include '02-akka-persistence'
+include '03-akka-persistence-query'
