@@ -1,5 +1,7 @@
 package sk.bsmk.es.actors
 
+import java.time.LocalDateTime
+
 import akka.actor.{Actor, ActorLogging, Props}
 import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, SpendVoucher}
@@ -17,7 +19,7 @@ object CustomerAccountActor {
 
 class CustomerAccountActor(val username: String) extends Actor with ActorLogging {
 
-  var customerAccount = CustomerAccount(username)
+  var customerAccount = CustomerAccount(username, LocalDateTime.now())
 
   override def receive: PartialFunction[Any, Unit] = {
 
