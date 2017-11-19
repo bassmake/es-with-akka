@@ -3,8 +3,9 @@ package sk.bsmk.es.persistence
 import java.time.LocalDateTime
 
 import akka.actor.{ActorLogging, Props}
-import akka.persistence.PersistentActor
+import akka.persistence.{PersistentActor, SnapshotOffer}
 import sk.bsmk.customer.CustomerAccount
+import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount, SpendVoucher}
 import sk.bsmk.customer.events._
 import sk.bsmk.customer.vouchers.VoucherRegistry
 
@@ -21,8 +22,8 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
 
   private def updateState(event: CustomerAccountEvent): Unit = event match {
     case CustomerAccountCreated(createdAt) ⇒ state = CustomerAccount(username, createdAt)
-    case PointsAdded(pointsAdded, _)       ⇒ state = state.addPoints(pointsAdded)
-    case VoucherBought(_, voucherCode) ⇒
+    case PointsAdded(pointsAdded)          ⇒ state = state.addPoints(pointsAdded)
+    case VoucherBought(voucherCode) ⇒
       VoucherRegistry.get(voucherCode) match {
         case None          ⇒ log.error("No voucher with code '{}'", voucherCode)
         case Some(voucher) ⇒ state = state.buyVoucher(voucher)
@@ -34,12 +35,28 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
       }
   }
 
-  override def receiveCommand = {
-    ???
+  override def receiveCommand: Receive = {
+    case CreateAccount ⇒
+      persist(CustomerAccountCreated(LocalDateTime.now())) { event ⇒
+        updateState(event)
+      }
+    case AddPoints(points) ⇒
+      persist(PointsAdded(points)) { event ⇒
+        updateState(event)
+      }
+    case BuyVoucher(voucherCode) ⇒
+      persist(VoucherBought(voucherCode)) { event ⇒
+        updateState(event)
+      }
+    case SpendVoucher(voucherCode) ⇒
+      persist(VoucherSpent(voucherCode)) { event ⇒
+        updateState(event)
+      }
   }
 
-  override def receiveRecover = {
-    ???
+  override def receiveRecover: Receive = {
+    case event: CustomerAccountEvent                 ⇒ updateState(event)
+    case SnapshotOffer(_, snapshot: CustomerAccount) ⇒ state = snapshot
   }
 
 }

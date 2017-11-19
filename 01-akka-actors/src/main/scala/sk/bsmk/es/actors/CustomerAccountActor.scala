@@ -21,7 +21,7 @@ class CustomerAccountActor(val username: String) extends Actor with ActorLogging
 
   var customerAccount = CustomerAccount(username, LocalDateTime.now())
 
-  override def receive: PartialFunction[Any, Unit] = {
+  override def receive: Receive = {
 
     case AddPoints(points) ⇒
       customerAccount = customerAccount.addPoints(points)
