@@ -6,11 +6,10 @@ class SimplePersistenceActor extends PersistentActor {
   var state                  = Set.empty[Int]
   override def persistenceId = "some-persistence-id"
   override def receiveCommand = {
-    case "add-one" ⇒
-      val eventToStore = 1
-      persist(eventToStore) { storedEvent ⇒
+    case "add-one" ⇒  persist(1) { storedEvent ⇒
         state = state + storedEvent
-      }
+    }
+    case "save-snapshot" ⇒ saveSnapshot(state)
   }
   override def receiveRecover = {
     case event: Int                           ⇒ state = state + event

@@ -37,10 +37,9 @@ class SimpleActor extends Actor {
 
 }
 ```
-
-@[1,11](extend actor trait)
+@[1,11](extend `Actor` trait)
+@[3](internal state)
 @[5-9](override receieve method)
-@[3](some internal state)
 @[6](adds 1 to state)
 @[7](adds 2 to state)
 @[8](sends state to sender (ask pattern))
@@ -56,7 +55,6 @@ actor ! "add-two"
 implicit val timeout    = Timeout(5.seconds)
 val future: Future[Any] = actor ? "get-state"
 ```
-
 @[1](create ActorSystem)
 @[2](create actor, props is like template)
 @[4](`tell` to add one, returns Unit)
@@ -89,27 +87,35 @@ val future: Future[Any] = actor ? "get-state"
 - only changes are persisted
 - full state can be persisted via snapshot
 - state is recovered by last snapshot and replaying changes
-- change ~ event 
+- each applied change is event 
 
 +++
 ### Persistent actor
 ```scala
 class SimplePersistenceActor extends PersistentActor {
-  var state            = Set.empty[Int]
+  var state                  = Set.empty[Int]
   override def persistenceId = "some-persistence-id"
   override def receiveCommand = {
-    case "add-one" ⇒
-      val eventToStore = 1
-      persist(eventToStore) { storedEvent ⇒
+    case "add-one" ⇒  persist(1) { storedEvent ⇒
         state = state + storedEvent
-      }
+    }
+    case "save-snapshot" ⇒ saveSnapshot(state)
   }
   override def receiveRecover = {
-    case event: Int                           ⇒ state = state + event
+    case event: Int ⇒ state = state + event
     case SnapshotOffer(_, snapshot: Set[Int]) ⇒ state = snapshot
   }
 }
 ```
+[1,14](extend `PersistentActor` trait)
+[2](internal state)
+[3](persistenceId - must be unique for all entities)
+[4-9](receiving commands that will change state)
+[5-7](persist event and change state afterwards)
+[8](persist event snapshot)
+[10-13](recovering at creation)
+[11](replaying event)
+[12](replaying snapshot)
 
 ---
 ### Coding part 2
