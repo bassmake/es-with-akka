@@ -2,12 +2,6 @@
 # Event Sourcing with akka-persistence
 
 ---
-@title[Akka]
-![Akka logo](https://akka.io/resources/images/akka_full_color.svg)
-
-* Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala
-
----
 ### Actor model
 - Created by Carl Hewitt in 1973
 - Inspired by physics
@@ -23,7 +17,13 @@ Actor is computational entity with behavior/state that based on received message
 - designate the behavior/state to be used for the next message it receives |
 
 ---
-### Akka actors
+@title[Akka]
+![Akka logo](https://akka.io/resources/images/akka_full_color.svg)
+
+* Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala
+
++++
+### Implementation
 ```scala
 class SimpleActor extends Actor {
 
