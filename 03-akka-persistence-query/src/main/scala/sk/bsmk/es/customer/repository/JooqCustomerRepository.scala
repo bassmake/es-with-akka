@@ -91,6 +91,13 @@ object JooqCustomerRepository extends CustomerRepository {
     })
   }
 
+  override def deleteVoucher(username: String, voucherCode: String): Unit = {
+    dsl
+      .deleteFrom(VOUCHERS)
+      .where(VOUCHERS.USERNAME.eq(username).and(VOUCHERS.CODE.eq(voucherCode)))
+      .execute()
+  }
+
   override def listCustomerAccounts(): List[CustomerAccountListItem] = {
     dsl
       .select(

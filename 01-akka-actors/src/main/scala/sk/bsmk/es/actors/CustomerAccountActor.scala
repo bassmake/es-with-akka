@@ -2,8 +2,8 @@ package sk.bsmk.es.actors
 
 import akka.actor.{Actor, ActorLogging, Props}
 import sk.bsmk.customer.CustomerAccount
-import sk.bsmk.customer.points.AddPointsToAccount
-import sk.bsmk.customer.vouchers.{BuyVoucher, SpendVoucher, VoucherRegistry}
+import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, SpendVoucher}
+import sk.bsmk.customer.vouchers.VoucherRegistry
 import sk.bsmk.es.actors.CustomerAccountActor.{LogState, SendState}
 
 object CustomerAccountActor {
@@ -21,7 +21,7 @@ class CustomerAccountActor(val username: String) extends Actor with ActorLogging
 
   override def receive: PartialFunction[Any, Unit] = {
 
-    case AddPointsToAccount(points) ⇒
+    case AddPoints(points) ⇒
       customerAccount = customerAccount.addPoints(points)
 
     case BuyVoucher(code) ⇒

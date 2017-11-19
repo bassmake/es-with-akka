@@ -6,8 +6,8 @@ import akka.pattern.ask
 import akka.util.Timeout
 import org.slf4j.LoggerFactory
 import sk.bsmk.customer.CustomerAccount
-import sk.bsmk.customer.points.AddPointsToAccount
-import sk.bsmk.customer.vouchers.{BuyVoucher, Voucher, VoucherRegistry}
+import sk.bsmk.customer.commands.{AddPoints, BuyVoucher}
+import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
 import sk.bsmk.es.actors.CustomerAccountActor.{LogState, SendState}
 
 import scala.concurrent.duration._
@@ -29,7 +29,7 @@ class CustomerAccountActorSpec extends WordSpec with Matchers {
 
       val actor = actorSystem.actorOf(CustomerAccountActor.props("alice"), "customer-1")
 
-      actor ! AddPointsToAccount(300)
+      actor ! AddPoints(300)
       actor ! BuyVoucher(voucher.code)
 
       "log correct state" in {
