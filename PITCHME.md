@@ -107,15 +107,15 @@ class SimplePersistenceActor extends PersistentActor {
   }
 }
 ```
-[1,14](extend `PersistentActor` trait)
-[2](internal state)
-[3](persistenceId - must be unique for all entities)
-[4-9](receiving commands that will change state)
-[5-7](persist event and change state afterwards)
-[8](persist event snapshot)
-[10-13](recovering at creation)
-[11](replaying event)
-[12](replaying snapshot)
+@[1,14](extend `PersistentActor` trait)
+@[2](internal state)
+@[3](persistenceId - must be unique for all entities)
+@[4-9](receiving commands that will change state)
+@[5-7](persist event and change state afterwards)
+@[8](persist event snapshot)
+@[10-13](recovering at creation)
+@[11](replaying event)
+@[12](replaying snapshot)
 
 ---
 ### Coding part 2
