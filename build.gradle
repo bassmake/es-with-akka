@@ -45,6 +45,9 @@ subprojects {
     compile("com.typesafe.akka:akka-slf4j_$scalaVersion:$akkaVersion")
     compile("ch.qos.logback:logback-classic:1.2.3")
 
+    // serialization
+    compile("com.twitter:chill-akka_$scalaVersion:0.9.2")
+
     // persistence
     jooqRuntime h2Dependency
     compile("com.typesafe.akka:akka-persistence_$scalaVersion:$akkaVersion")

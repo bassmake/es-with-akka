@@ -8,10 +8,13 @@ import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount, SpendVoucher}
 import sk.bsmk.customer.events._
 import sk.bsmk.customer.vouchers.VoucherRegistry
+import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.GetState
 
 object CustomerAccountPersistenceActor {
 
   def props(username: String): Props = Props(new CustomerAccountPersistenceActor(username))
+
+  object GetState
 
 }
 
@@ -52,6 +55,7 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
       persist(VoucherSpent(voucherCode)) { event ⇒
         updateState(event)
       }
+    case GetState ⇒ sender() ! state
   }
 
   override def receiveRecover: Receive = {
