@@ -1,4 +1,4 @@
-@title[Intro]
+@title[Title]
 # Event Sourcing with akka-persistence
 
 ---
@@ -8,7 +8,6 @@
 * Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala
 
 ---
-@title[Actor model]
 ### Actor model
 - Created by Carl Hewitt in 1973
 - Inspired by physics
@@ -17,7 +16,6 @@
 - Akka
 
 +++
-@title[Actors]
 ### Actors
 Actor is computational entity with state that based on received message can
 - send a finite number of messages to other actors |
@@ -25,7 +23,6 @@ Actor is computational entity with state that based on received message can
 - designate the behavior (state) to be used for the next message it receives |
 
 ---
-@title[Akka actors]
 ### Akka actors
 ```scala
 class SimpleActor extends Actor {
@@ -49,7 +46,6 @@ class SimpleActor extends Actor {
 @[8](sends state to sender (ask pattern))
 
 +++
-@title[Creation and usage]
 ### Creation and usage
 ```scala
 val system = ActorSystem("name")
@@ -68,11 +64,9 @@ val future: Future[Any] = actor ? "get-state"
 @[6-7](`ask` for state, needs timeout)
 
 ---
-@title[Coding part 1]
 ### Coding part 1
 
 ---
-@title[CQRS]
 ### CQRS
 - Command Query Responsibility Segregation
 - Different model is used for update and for read
@@ -81,8 +75,7 @@ val future: Future[Any] = actor ? "get-state"
 - Adds complexity
 
 ---
-@title[Event sourcing]
-### Event Sourcing
+### Event sourcing
 - Every change is stored as an event
 - Events are consumed asynchronously
 - Easy to create new read models
@@ -91,32 +84,25 @@ val future: Future[Any] = actor ? "get-state"
 - Higher complexity
 
 ---
-@title[Akka persistence]
 ### Akka persistence
 - TODO
 
 ---
-@title[Coding part 2]
 ### Coding part 2
 
 ---
-@title[Projections]
 ### Projections
 
 ---
-@title[Akka persistence query]
 ### Akka persistence query
 
 ---
-@title[Coding part 3]
 ### Coding part 3
 
 ---
-@title[Akka serialization]
 ### About Akka serialization
 
 ---
-@title[Thanks]
 ### Thank you
 useful links:
 - https://akka.io/
