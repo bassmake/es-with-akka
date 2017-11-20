@@ -57,11 +57,11 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
         updateState(event)
       }
     case StoreSnapshot ⇒ saveSnapshot(state)
-    case GetState ⇒ sender() ! state
+    case GetState      ⇒ sender() ! state
   }
 
   override def receiveRecover: Receive = {
-    case event: CustomerAccountEvent                 ⇒
+    case event: CustomerAccountEvent ⇒
       log.info("Processing event {}", event)
       updateState(event)
     case SnapshotOffer(_, snapshot: CustomerAccount) ⇒

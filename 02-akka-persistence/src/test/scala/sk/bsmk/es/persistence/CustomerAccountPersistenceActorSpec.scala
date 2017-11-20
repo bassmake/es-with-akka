@@ -24,7 +24,7 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
 
         implicit val timeout: Timeout = Timeout(5.seconds)
         def printState(): Unit = {
-          val state                     = Await.result(account ? GetState, timeout.duration)
+          val state = Await.result(account ? GetState, timeout.duration)
           pprint.pprintln(state)
         }
 
@@ -32,8 +32,6 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
         account ! AddPoints(100)
 
         printState()
-
-
 
         account ! BuyVoucher(voucher.code)
 
