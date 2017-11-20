@@ -136,6 +136,10 @@ TODO
 TODO
 
 ---
+### Event adapters
+TODO
+
+---
 ### Thank you
 useful links:
 - https://akka.io/

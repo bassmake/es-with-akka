@@ -8,13 +8,14 @@ import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount, SpendVoucher}
 import sk.bsmk.customer.events._
 import sk.bsmk.customer.vouchers.VoucherRegistry
-import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.GetState
+import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
 
 object CustomerAccountPersistenceActor {
 
   def props(username: String): Props = Props(new CustomerAccountPersistenceActor(username))
 
   object GetState
+  object StoreSnapshot
 
 }
 
@@ -55,12 +56,17 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
       persist(VoucherSpent(voucherCode)) { event ⇒
         updateState(event)
       }
+    case StoreSnapshot ⇒ saveSnapshot(state)
     case GetState ⇒ sender() ! state
   }
 
   override def receiveRecover: Receive = {
-    case event: CustomerAccountEvent                 ⇒ updateState(event)
-    case SnapshotOffer(_, snapshot: CustomerAccount) ⇒ state = snapshot
+    case event: CustomerAccountEvent                 ⇒
+      log.info("Processing event {}", event)
+      updateState(event)
+    case SnapshotOffer(_, snapshot: CustomerAccount) ⇒
+      log.info("Processing snapshot {}", snapshot)
+      state = snapshot
   }
 
 }

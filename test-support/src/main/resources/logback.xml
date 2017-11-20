@@ -13,11 +13,19 @@
     <appender-ref ref="STDOUT" />
   </root>
 
-  <logger name="slick" level="INFO" />
-  <logger name="com.zaxxer.hikari" level="INFO" />
+  <logger name="slick" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="com.zaxxer.hikari" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
 
-  <logger name="org.jooq" level="DEBUG" />
+  <logger name="org.jooq" level="DEBUG" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
 
-  <logger name="sk.bsmk" level="DEBUG" />
+  <logger name="sk.bsmk" level="DEBUG" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
 
 </configuration>
