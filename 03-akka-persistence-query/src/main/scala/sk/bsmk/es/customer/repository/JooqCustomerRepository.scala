@@ -44,7 +44,7 @@ object JooqCustomerRepository extends CustomerRepository {
 
   val datasource: DataSource = {
     val hikariConfig = new HikariConfig()
-    hikariConfig.setJdbcUrl("jdbc:h2:file:./03-akka-persistence-query/build/es-db")
+    hikariConfig.setJdbcUrl("jdbc:h2:file:./build/es-db")
     hikariConfig.setUsername("sa")
     new HikariDataSource(hikariConfig)
   }
