@@ -122,11 +122,19 @@ class SimplePersistenceActor extends PersistentActor {
 
 ---
 ### Projections
-TODO
+- used for `read` side in CQRS
+- stream of events is consumed to update projection
+- different projections on the same events can be used for different cases
 
 ---
 ### Akka persistence query
-TODO
+- complements akka-persistence by providing stream based query
+
++++
+### Read journal
+```scala
+
+```
 
 ---
 ### Coding part 3
