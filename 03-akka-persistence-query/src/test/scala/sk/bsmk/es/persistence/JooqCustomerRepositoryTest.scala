@@ -1,4 +1,4 @@
-package sk.bsmk.es.customer.repository
+package sk.bsmk.es.persistence
 
 import org.scalatest.{Matchers, WordSpec}
 import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}

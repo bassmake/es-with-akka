@@ -1,4 +1,4 @@
-package sk.bsmk.es.customer.repository
+package sk.bsmk.es.persistence
 
 import java.time.LocalDateTime
 import javax.sql.DataSource
@@ -12,6 +12,7 @@ import sk.bsmk.customer.vouchers.Voucher
 import sk.bsmk.es.persistence.model.Tables._
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 object JooqCustomerRepository extends CustomerRepository {
 
@@ -51,47 +52,53 @@ object JooqCustomerRepository extends CustomerRepository {
 
   val dsl: DSLContext = DSL.using(datasource, SQLDialect.H2)
 
-  override def insertCustomerAccount(username: String): Unit = {
-    dsl
-      .insertInto(CUSTOMER_ACCOUNTS)
-      .set(CUSTOMER_ACCOUNTS.USERNAME, username)
-      .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(0))
-      .set(CUSTOMER_ACCOUNTS.CREATED_AT, LocalDateTime.now())
-      .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
-      .execute()
-  }
-
-  override def updatePoints(username: String, newPointBalance: Int): Unit = {
-    dsl
-      .update(CUSTOMER_ACCOUNTS)
-      .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(newPointBalance))
-      .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
-      .where(CUSTOMER_ACCOUNTS.USERNAME.eq(username))
-      .execute()
-  }
-
-  override def insertVoucherAndUpdatePoints(username: String, newPointBalance: Int, voucher: Voucher): Unit = {
-    dsl.transaction(ctx ⇒ {
-      DSL
-        .using(ctx)
-        .insertInto(VOUCHERS)
-        .set(VOUCHERS.CODE, voucher.code)
-        .set(VOUCHERS.USERNAME, username)
-        .set(VOUCHERS.VALUE, double2Double(voucher.value))
+  override def insertCustomerAccount(username: String): Future[Unit] = {
+    Future {
+      dsl
+        .insertInto(CUSTOMER_ACCOUNTS)
+        .set(CUSTOMER_ACCOUNTS.USERNAME, username)
+        .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(0))
+        .set(CUSTOMER_ACCOUNTS.CREATED_AT, LocalDateTime.now())
+        .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
         .execute()
+    }
+  }
 
-      DSL
-        .using(ctx)
+  override def updatePoints(username: String, newPointBalance: Int): Future[Unit] = {
+    Future {
+      dsl
         .update(CUSTOMER_ACCOUNTS)
         .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(newPointBalance))
         .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
         .where(CUSTOMER_ACCOUNTS.USERNAME.eq(username))
         .execute()
-
-    })
+    }
   }
 
-  override def deleteVoucher(username: String, voucherCode: String): Unit = {
+  override def insertVoucherAndUpdatePoints(username: String, newPointBalance: Int, voucher: Voucher): Future[Unit] = {
+    Future {
+      dsl.transaction(ctx ⇒ {
+        DSL
+          .using(ctx)
+          .insertInto(VOUCHERS)
+          .set(VOUCHERS.CODE, voucher.code)
+          .set(VOUCHERS.USERNAME, username)
+          .set(VOUCHERS.VALUE, double2Double(voucher.value))
+          .execute()
+
+        DSL
+          .using(ctx)
+          .update(CUSTOMER_ACCOUNTS)
+          .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(newPointBalance))
+          .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
+          .where(CUSTOMER_ACCOUNTS.USERNAME.eq(username))
+          .execute()
+
+      })
+    }
+  }
+
+  override def deleteVoucher(username: String, voucherCode: String): Future[Unit] = {
     dsl
       .deleteFrom(VOUCHERS)
       .where(VOUCHERS.USERNAME.eq(username).and(VOUCHERS.CODE.eq(voucherCode)))
