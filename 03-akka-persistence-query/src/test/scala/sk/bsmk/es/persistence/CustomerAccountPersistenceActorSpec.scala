@@ -3,7 +3,7 @@ package sk.bsmk.es.persistence
 import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount}
 import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
 import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
@@ -11,7 +11,12 @@ import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSn
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
+class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers with BeforeAndAfter {
+
+  before {
+    JooqCustomerRepository.dsl.execute("DELETE FROM PUBLIC.\"snapshot\"")
+    JooqCustomerRepository.dsl.execute("DELETE FROM PUBLIC.\"journal\"")
+  }
 
   val voucher = Voucher("voucher-a", 10, 123.12)
   VoucherRegistry.add(voucher)
@@ -19,6 +24,7 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
   "Customer account persistent actor" when {
     "commands are consumed" should {
       "change state" in {
+
         val actorSystem = ActorSystem("es-system")
         val account     = actorSystem.actorOf(CustomerAccountPersistenceActor.props("customer-1"), "customer-1")
 

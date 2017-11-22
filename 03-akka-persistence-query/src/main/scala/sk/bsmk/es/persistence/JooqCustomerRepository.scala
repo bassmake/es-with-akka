@@ -14,6 +14,8 @@ import sk.bsmk.es.persistence.model.Tables._
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object JooqCustomerRepository extends CustomerRepository {
 
   private type CustomerAccountListItemRecord = Record5[String, Integer, LocalDateTime, LocalDateTime, Integer]
@@ -43,14 +45,14 @@ object JooqCustomerRepository extends CustomerRepository {
         )
     }
 
-  val datasource: DataSource = {
+  val dataSource: DataSource = {
     val hikariConfig = new HikariConfig()
     hikariConfig.setJdbcUrl("jdbc:h2:file:./build/es-db")
     hikariConfig.setUsername("sa")
     new HikariDataSource(hikariConfig)
   }
 
-  val dsl: DSLContext = DSL.using(datasource, SQLDialect.H2)
+  val dsl: DSLContext = DSL.using(dataSource, SQLDialect.H2)
 
   override def insertCustomerAccount(username: String): Future[Unit] = {
     Future {
@@ -99,10 +101,12 @@ object JooqCustomerRepository extends CustomerRepository {
   }
 
   override def deleteVoucher(username: String, voucherCode: String): Future[Unit] = {
-    dsl
-      .deleteFrom(VOUCHERS)
-      .where(VOUCHERS.USERNAME.eq(username).and(VOUCHERS.CODE.eq(voucherCode)))
-      .execute()
+    Future {
+      dsl
+        .deleteFrom(VOUCHERS)
+        .where(VOUCHERS.USERNAME.eq(username).and(VOUCHERS.CODE.eq(voucherCode)))
+        .execute()
+    }
   }
 
   override def listCustomerAccounts(): List[CustomerAccountListItem] = {

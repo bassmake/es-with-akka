@@ -1,4 +1,4 @@
-package sk.bsmk.es.persistence
+package sk.bsmk.customer.persistence
 
 import akka.persistence.journal.{Tagged, WriteEventAdapter}
 import sk.bsmk.customer.events.CustomerAccountEvent
@@ -11,8 +11,8 @@ class TaggingEventAdapter extends WriteEventAdapter {
 
   override def manifest(event: Any) = ""
 
-  override def toJournal(event: Any) = event match {
-    case _: CustomerAccountEvent ⇒ Tagged(event, Set(CustomerAccountTag))
-    case _ ⇒ event
+  override def toJournal(event: Any): Any = event match {
+    case _: CustomerAccountEvent ⇒ Tagged(event, Set(TaggingEventAdapter.CustomerAccountTag))
+    case _                       ⇒ event
   }
 }
