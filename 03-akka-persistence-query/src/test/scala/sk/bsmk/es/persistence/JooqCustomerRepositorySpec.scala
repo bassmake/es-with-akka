@@ -1,19 +1,20 @@
 package sk.bsmk.es.persistence
 
 import org.scalatest.{Matchers, WordSpec}
-import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
-import sk.bsmk.es.persistence.model.Tables._
+import sk.bsmk.customer.vouchers.Voucher
+import sk.bsmk.es.persistence.model.Tables.{CUSTOMER_ACCOUNTS, VOUCHERS}
 
-class JooqCustomerRepositoryTest extends WordSpec with Matchers {
+class JooqCustomerRepositorySpec extends WordSpec with Matchers {
 
   "Customer repository" when {
 
     val repository = JooqCustomerRepository
+    val dsl        = repository.dsl
 
     "some data are stored" should {
 
-      JooqCustomerRepository.dsl.deleteFrom(VOUCHERS).execute()
-      JooqCustomerRepository.dsl.deleteFrom(CUSTOMER_ACCOUNTS).execute()
+      dsl.deleteFrom(VOUCHERS).execute()
+      dsl.deleteFrom(CUSTOMER_ACCOUNTS).execute()
 
       prepareCustomer1()
       prepareCustomer2()
