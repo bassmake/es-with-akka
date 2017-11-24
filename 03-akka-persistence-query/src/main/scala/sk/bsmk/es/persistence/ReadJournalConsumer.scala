@@ -26,12 +26,21 @@ class ReadJournalConsumer(actorSystem: ActorSystem)(implicit val materializer: M
     PersistenceQuery(actorSystem).readJournalFor[JdbcReadJournal](JdbcReadJournal.Identifier)
 
   readJournal
+    .persistenceIds()
+    .runForeach(id ⇒ log.info("Persistence id = {} from ReadJournal", id))
+
+  readJournal
+    .eventsByPersistenceId("customer-1", 0, 10)
+    .runForeach(envelope ⇒ log.info("Received {} from ReadJournal for customer-1", envelope))
+
+  readJournal
     .eventsByTag(TaggingEventAdapter.CustomerAccountTag, Offset.noOffset)
-    .mapAsync(1) { envelope ⇒
-      Future {
-        log.info("Received {}", envelope)
-      }
-    }
-    .runWith(Sink.ignore)
+    .runForeach(envelope ⇒ log.info("Received {} from ReadJournal", envelope))
+//    .mapAsync(1) { envelope ⇒
+//      Future {
+//        log.info("Received {}", envelope)
+//      }
+//    }
+//    .runWith(Sink.ignore)
 
 }

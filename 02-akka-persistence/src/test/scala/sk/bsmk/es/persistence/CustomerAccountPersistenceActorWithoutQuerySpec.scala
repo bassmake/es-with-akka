@@ -39,7 +39,7 @@ class CustomerAccountPersistenceActorWithoutQuerySpec extends WordSpec with Matc
       "change state" in {
         val actorSystem = ActorSystem("es-system")
 
-        implicit val timeout: Timeout = Timeout(5.seconds)
+        implicit val timeout: Timeout = Timeout(60.seconds)
         def printState(actorRef: ActorRef): Unit = {
           val state = Await.result(actorRef ? GetState, timeout.duration)
           pprint.pprintln(state)

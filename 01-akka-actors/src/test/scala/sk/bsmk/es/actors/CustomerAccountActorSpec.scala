@@ -37,7 +37,7 @@ class CustomerAccountActorSpec extends WordSpec with Matchers {
       }
 
       "send correct state" in {
-        implicit val timeout: Timeout = Timeout(5.seconds)
+        implicit val timeout: Timeout = Timeout(60.seconds)
 
         val responseAny: Future[Any] = actor ? SendState
 

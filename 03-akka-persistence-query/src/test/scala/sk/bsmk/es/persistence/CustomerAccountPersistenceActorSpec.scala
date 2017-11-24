@@ -29,7 +29,7 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
 
   "Customer account persistent actor" when {
     "commands are consumed" should {
-      "change state" in {
+      "change state and projections" in {
 
         implicit val actorSystem: ActorSystem   = ActorSystem("es-system")
         implicit val materializer: Materializer = ActorMaterializer()
@@ -37,7 +37,7 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
 
         val consumer = ReadJournalConsumer(actorSystem)
 
-        implicit val timeout: Timeout = Timeout(5.seconds)
+        implicit val timeout: Timeout = Timeout(60.seconds)
         def printState(): Unit = {
           val state = Await.result(account ? GetState, timeout.duration)
           pprint.pprintln(state)
@@ -49,11 +49,8 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
         printState()
         account ! BuyVoucher(voucher.code)
         printState()
-        account ! StoreSnapshot
-        printState()
-        Thread.sleep(10000)
 
-        printState()
+        Thread.sleep(5000)
 
       }
     }
