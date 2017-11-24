@@ -2,7 +2,7 @@ package sk.bsmk.es.persistence
 
 import javax.sql.DataSource
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount}
 import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
@@ -16,7 +16,7 @@ import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
-class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers with BeforeAndAfter {
+class CustomerAccountPersistenceActorWithoutQuerySpec extends WordSpec with Matchers with BeforeAndAfter {
 
   val voucher = Voucher("voucher-a", 10, 123.12)
   VoucherRegistry.add(voucher)
@@ -38,25 +38,31 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers with Be
     "commands are consumed" should {
       "change state" in {
         val actorSystem = ActorSystem("es-system")
-        val account     = actorSystem.actorOf(CustomerAccountPersistenceActor.props("customer-1"), "customer-1")
 
         implicit val timeout: Timeout = Timeout(5.seconds)
-        def printState(): Unit = {
-          val state = Await.result(account ? GetState, timeout.duration)
+        def printState(actorRef: ActorRef): Unit = {
+          val state = Await.result(actorRef ? GetState, timeout.duration)
           pprint.pprintln(state)
         }
 
-        account ! CreateAccount
-        account ! AddPoints(100)
+        {
+          val account = actorSystem.actorOf(CustomerAccountPersistenceActor.props("customer-1"), "customer-1")
 
-        printState()
+          account ! CreateAccount
+          printState(account)
+          account ! AddPoints(100)
+          printState(account)
+          account ! BuyVoucher(voucher.code)
+          printState(account)
+          account ! StoreSnapshot
+          Thread.sleep(100)
+          printState(account)
+          actorSystem.stop(account)
+        }
+        pprint.pprintln("-------------")
 
-        account ! BuyVoucher(voucher.code)
-
-        account ! StoreSnapshot
-
-        printState()
-
+        val account = actorSystem.actorOf(CustomerAccountPersistenceActor.props("customer-1"), "customer-1-new")
+        printState(account)
       }
     }
   }

@@ -3,7 +3,7 @@ package sk.bsmk.es.persistence
 import java.time.LocalDateTime
 
 import akka.actor.{ActorLogging, Props}
-import akka.persistence.{PersistentActor, SnapshotOffer}
+import akka.persistence.{PersistentActor, SaveSnapshotFailure, SaveSnapshotSuccess, SnapshotOffer}
 import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount, SpendVoucher}
 import sk.bsmk.customer.events._
@@ -56,16 +56,18 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
       persist(VoucherSpent(voucherCode)) { event ⇒
         updateState(event)
       }
-    case StoreSnapshot ⇒ saveSnapshot(state)
-    case GetState      ⇒ sender() ! state
+    case StoreSnapshot                         ⇒ saveSnapshot(state)
+    case SaveSnapshotSuccess(metadata)         ⇒ log.info("Snapshot succeeded {}", metadata)
+    case SaveSnapshotFailure(metadata, reason) ⇒ log.error("Snapshot failed {}", reason, metadata)
+    case GetState                              ⇒ sender() ! state
   }
 
   override def receiveRecover: Receive = {
     case event: CustomerAccountEvent ⇒
-      log.info("Processing event {}", event)
+      log.info("Processing recovery event {}", event)
       updateState(event)
     case SnapshotOffer(_, snapshot: CustomerAccount) ⇒
-      log.info("Processing snapshot {}", snapshot)
+      log.info("Processing recovery snapshot {}", snapshot)
       state = snapshot
   }
 

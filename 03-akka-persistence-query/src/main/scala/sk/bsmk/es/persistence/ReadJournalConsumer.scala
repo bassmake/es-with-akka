@@ -11,6 +11,13 @@ import sk.bsmk.customer.persistence.TaggingEventAdapter
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+object ReadJournalConsumer {
+
+  def apply(actorSystem: ActorSystem)(implicit materializer: Materializer): ReadJournalConsumer =
+    new ReadJournalConsumer(actorSystem)
+
+}
+
 class ReadJournalConsumer(actorSystem: ActorSystem)(implicit val materializer: Materializer) {
 
   private val log = LoggerFactory.getLogger(this.getClass)
