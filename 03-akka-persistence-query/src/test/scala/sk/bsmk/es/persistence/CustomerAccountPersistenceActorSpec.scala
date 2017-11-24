@@ -8,7 +8,7 @@ import org.jooq.DSLContext
 import org.scalatest.{DoNotDiscover, Matchers, WordSpec}
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount}
 import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
-import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
+import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.GetState
 import sk.bsmk.es.persistence.model.Tables.{CUSTOMER_ACCOUNTS, VOUCHERS}
 
 import scala.concurrent.Await
@@ -50,8 +50,8 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
         account ! BuyVoucher(voucher.code)
         printState()
 
-        Thread.sleep(5000)
-
+        val result = dsl.fetch("SELECT * FROM PUBLIC.\"journal\"")
+        result.size() shouldBe 3
       }
     }
   }
