@@ -56,7 +56,13 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
 
         Thread.sleep(11000)
 
-        repository.listCustomerAccounts() should have size 1
+        val customers = repository.listCustomerAccounts()
+        customers should have size 1
+        val customer = customers.head
+
+        customer.username shouldBe "customer-1"
+        customer.nrOfVouchers shouldBe 1
+        customer.pointBalance shouldBe 90
 
       }
     }
