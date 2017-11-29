@@ -4,7 +4,7 @@ import akka.persistence.journal.{Tagged, WriteEventAdapter}
 import sk.bsmk.customer.events.CustomerAccountEvent
 
 object TaggingEventAdapter {
-  val CustomerAccountTag = "CustomerAccount"
+  val CustomerAccountTag = "CustomerEvent"
 }
 
 class TaggingEventAdapter extends WriteEventAdapter {

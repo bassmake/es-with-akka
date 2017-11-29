@@ -20,7 +20,8 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
   val voucher = Voucher("voucher-a", 10, 123.12)
   VoucherRegistry.add(voucher)
 
-  val dsl: DSLContext = JooqCustomerRepository.dsl
+  val dsl: DSLContext                         = JooqCustomerRepository.dsl
+  val repository: JooqCustomerRepository.type = JooqCustomerRepository
 
   dsl.execute("DELETE FROM PUBLIC.\"snapshot\"")
   dsl.execute("DELETE FROM PUBLIC.\"journal\"")
@@ -34,8 +35,6 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
         implicit val actorSystem: ActorSystem   = ActorSystem("es-system")
         implicit val materializer: Materializer = ActorMaterializer()
         val account                             = actorSystem.actorOf(CustomerAccountPersistenceActor.props("customer-1"), "customer-1")
-
-        val consumer = ReadJournalConsumer(actorSystem)
 
         implicit val timeout: Timeout = Timeout(60.seconds)
         def printState(): Unit = {
@@ -51,7 +50,14 @@ class CustomerAccountPersistenceActorSpec extends WordSpec with Matchers {
         printState()
 
         val result = dsl.fetch("SELECT * FROM PUBLIC.\"journal\"")
-        result.size() shouldBe 3
+        result should have size 3
+
+        val consumer = ReadJournalConsumer(actorSystem)
+
+        Thread.sleep(11000)
+
+        repository.listCustomerAccounts() should have size 1
+
       }
     }
   }

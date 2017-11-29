@@ -13,10 +13,11 @@ import sk.bsmk.es.persistence.model.Tables._
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object JooqCustomerRepository extends CustomerRepository {
+
+//  private val log = LoggerFactory.getLogger(JooqCustomerRepository.getClass)
 
   private type CustomerAccountListItemRecord = Record5[String, Integer, LocalDateTime, LocalDateTime, Integer]
   private type CustomerAccountVoucherListItemRecord =
@@ -54,13 +55,13 @@ object JooqCustomerRepository extends CustomerRepository {
 
   val dsl: DSLContext = DSL.using(dataSource, SQLDialect.H2)
 
-  override def insertCustomerAccount(username: String): Future[Unit] = {
+  override def insertCustomerAccount(username: String, createdAt: LocalDateTime): Future[Unit] = {
     Future {
       dsl
         .insertInto(CUSTOMER_ACCOUNTS)
         .set(CUSTOMER_ACCOUNTS.USERNAME, username)
         .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(0))
-        .set(CUSTOMER_ACCOUNTS.CREATED_AT, LocalDateTime.now())
+        .set(CUSTOMER_ACCOUNTS.CREATED_AT, createdAt)
         .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
         .execute()
     }

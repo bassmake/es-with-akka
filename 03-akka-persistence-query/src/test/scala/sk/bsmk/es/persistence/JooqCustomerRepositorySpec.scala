@@ -1,5 +1,7 @@
 package sk.bsmk.es.persistence
 
+import java.time.LocalDateTime
+
 import org.scalatest.{Matchers, WordSpec}
 import sk.bsmk.customer.vouchers.Voucher
 import sk.bsmk.es.persistence.model.Tables.{CUSTOMER_ACCOUNTS, VOUCHERS}
@@ -35,13 +37,13 @@ class JooqCustomerRepositorySpec extends WordSpec with Matchers {
     }
     def prepareCustomer1(): Unit = {
       val username = "customer-1"
-      repository.insertCustomerAccount(username)
+      repository.insertCustomerAccount(username, LocalDateTime.now())
       repository.updatePoints(username, 100)
       repository.insertVoucherAndUpdatePoints(username, 90, Voucher("voucher-1-a", 10, 100))
     }
     def prepareCustomer2(): Unit = {
       val username = "customer-2"
-      repository.insertCustomerAccount(username)
+      repository.insertCustomerAccount(username, LocalDateTime.now())
       repository.updatePoints(username, 200)
       repository.insertVoucherAndUpdatePoints(username, 170, Voucher("voucher-2-a", 30, 130))
       repository.insertVoucherAndUpdatePoints(username, 130, Voucher("voucher-2-b", 40, 130))
@@ -49,11 +51,11 @@ class JooqCustomerRepositorySpec extends WordSpec with Matchers {
     }
     def prepareCustomer3(): Unit = {
       val username = "customer-3"
-      repository.insertCustomerAccount(username)
+      repository.insertCustomerAccount(username, LocalDateTime.now())
       repository.updatePoints(username, 300)
     }
     def prepareCustomer4(): Unit = {
-      repository.insertCustomerAccount("customer-4")
+      repository.insertCustomerAccount("customer-4", LocalDateTime.now())
     }
   }
 
