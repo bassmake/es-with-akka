@@ -7,7 +7,6 @@ import akka.persistence.{PersistentActor, SaveSnapshotFailure, SaveSnapshotSucce
 import sk.bsmk.customer.CustomerAccount
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount, SpendVoucher}
 import sk.bsmk.customer.events._
-import sk.bsmk.customer.vouchers.VoucherRegistry
 import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
 
 object CustomerAccountPersistenceActor {
@@ -27,16 +26,8 @@ class CustomerAccountPersistenceActor(val username: String) extends PersistentAc
   private def updateState(event: CustomerAccountEvent): Unit = event match {
     case CustomerAccountCreated(createdAt) ⇒ state = CustomerAccount(username, createdAt)
     case PointsAdded(pointsAdded)          ⇒ state = state.addPoints(pointsAdded)
-    case VoucherBought(voucherCode) ⇒
-      VoucherRegistry.get(voucherCode) match {
-        case None          ⇒ log.error("No voucher with code '{}'", voucherCode)
-        case Some(voucher) ⇒ state = state.buyVoucher(voucher)
-      }
-    case VoucherSpent(voucherCode) ⇒
-      VoucherRegistry.get(voucherCode) match {
-        case None          ⇒ log.error("No voucher with code '{}'", voucherCode)
-        case Some(voucher) ⇒ state = state.spendVoucher(voucher)
-      }
+    case VoucherBought(voucherCode)        ⇒ state = state.buyVoucher(voucherCode)
+    case VoucherSpent(voucherCode)         ⇒ state = state.spendVoucher(voucherCode)
   }
 
   override def receiveCommand: Receive = {

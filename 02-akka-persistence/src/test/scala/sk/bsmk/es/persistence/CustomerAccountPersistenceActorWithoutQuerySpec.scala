@@ -3,7 +3,7 @@ package sk.bsmk.es.persistence
 import javax.sql.DataSource
 
 import akka.actor.{ActorRef, ActorSystem}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+import org.scalatest.{BeforeAndAfter, DoNotDiscover, Matchers, WordSpec}
 import sk.bsmk.customer.commands.{AddPoints, BuyVoucher, CreateAccount}
 import sk.bsmk.es.persistence.CustomerAccountPersistenceActor.{GetState, StoreSnapshot}
 import akka.pattern.ask
@@ -16,6 +16,7 @@ import sk.bsmk.customer.vouchers.{Voucher, VoucherRegistry}
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
+@DoNotDiscover
 class CustomerAccountPersistenceActorWithoutQuerySpec extends WordSpec with Matchers with BeforeAndAfter {
 
   val voucher = Voucher("voucher-a", 10, 123.12)
