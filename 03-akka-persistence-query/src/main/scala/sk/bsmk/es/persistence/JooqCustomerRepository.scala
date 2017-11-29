@@ -67,18 +67,18 @@ object JooqCustomerRepository extends CustomerRepository {
     }
   }
 
-  override def updatePoints(username: String, newPointBalance: Int): Future[Unit] = {
+  override def updatePoints(username: String, pointsToAdd: Int): Future[Unit] = {
     Future {
       dsl
         .update(CUSTOMER_ACCOUNTS)
-        .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(newPointBalance))
+        .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, field(CUSTOMER_ACCOUNTS.POINT_BALANCE).add(pointsToAdd))
         .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
         .where(CUSTOMER_ACCOUNTS.USERNAME.eq(username))
         .execute()
     }
   }
 
-  override def insertVoucherAndUpdatePoints(username: String, newPointBalance: Int, voucher: Voucher): Future[Unit] = {
+  override def insertVoucherAndUpdatePoints(username: String, pointsToReduce: Int, voucher: Voucher): Future[Unit] = {
     Future {
       dsl.transaction(ctx ⇒ {
         DSL
@@ -92,7 +92,7 @@ object JooqCustomerRepository extends CustomerRepository {
         DSL
           .using(ctx)
           .update(CUSTOMER_ACCOUNTS)
-          .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, int2Integer(newPointBalance))
+          .set(CUSTOMER_ACCOUNTS.POINT_BALANCE, field(CUSTOMER_ACCOUNTS.POINT_BALANCE).subtract(pointsToReduce))
           .set(CUSTOMER_ACCOUNTS.UPDATED_AT, LocalDateTime.now())
           .where(CUSTOMER_ACCOUNTS.USERNAME.eq(username))
           .execute()

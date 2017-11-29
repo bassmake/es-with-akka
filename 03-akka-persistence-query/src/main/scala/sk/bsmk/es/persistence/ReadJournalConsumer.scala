@@ -8,6 +8,9 @@ import akka.stream.scaladsl.Sink
 import org.slf4j.LoggerFactory
 import sk.bsmk.customer.events.{CustomerAccountCreated, PointsAdded, VoucherBought, VoucherSpent}
 import sk.bsmk.customer.persistence.TaggingEventAdapter
+import sk.bsmk.customer.vouchers.VoucherRegistry
+
+import scala.concurrent.Future
 
 object ReadJournalConsumer {
 
@@ -38,13 +41,20 @@ class ReadJournalConsumer(actorSystem: ActorSystem)(implicit val materializer: M
       envelope
     })
     .mapAsync(1) { envelope ⇒
-      val id    = envelope.persistenceId
-      val event = envelope.event
+      val persistenceId = envelope.persistenceId
+      val event         = envelope.event
       event match {
-        case CustomerAccountCreated(createdAt) ⇒ JooqCustomerRepository.insertCustomerAccount(id, createdAt)
-        case PointsAdded(pointsAdded)          ⇒ ???
-        case VoucherBought(voucherCode)        ⇒ ???
-        case VoucherSpent(voucherCode)         ⇒ ???
+        case CustomerAccountCreated(createdAt) ⇒ JooqCustomerRepository.insertCustomerAccount(persistenceId, createdAt)
+        case PointsAdded(pointsAdded)          ⇒ JooqCustomerRepository.updatePoints(persistenceId, pointsAdded)
+        case VoucherBought(voucherCode) ⇒
+          VoucherRegistry.get(voucherCode) match {
+            case Some(voucher) ⇒
+              JooqCustomerRepository.insertVoucherAndUpdatePoints(persistenceId, voucher.points, voucher)
+            case None ⇒
+              log.error("Voucher {} not found", voucherCode)
+              Future.successful("")
+          }
+        case VoucherSpent(voucherCode) ⇒ JooqCustomerRepository.deleteVoucher(persistenceId, voucherCode)
       }
     }
     .runWith(Sink.ignore)
