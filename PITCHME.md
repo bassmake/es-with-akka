@@ -138,7 +138,7 @@ val readJournal: JdbcReadJournal = PersistenceQuery(actorSystem).
   
 readJournal
   .persistenceIds()
-  .runForeach(id ⇒ log.info("Persistence id = {} from ReadJournal", id))
+  .runForeach(id ⇒ log.info("new PersistenceId = {}", id))
 ```
 @[1,2](instantiate journal)
 @[4-6](get akka-stream of new persistence ids)
