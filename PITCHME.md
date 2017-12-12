@@ -133,8 +133,15 @@ class SimplePersistenceActor extends PersistentActor {
 +++
 ### Read journal
 ```scala
-
+val readJournal: JdbcReadJournal = PersistenceQuery(actorSystem).
+  readJournalFor[JdbcReadJournal](JdbcReadJournal.Identifier)
+  
+readJournal
+  .persistenceIds()
+  .runForeach(id ⇒ log.info("Persistence id = {} from ReadJournal", id))
 ```
+@[1,2](instantiate journal)
+@[4-6](get akka-stream of new persistence ids)
 
 ---
 ### Coding part 3
