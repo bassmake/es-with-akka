@@ -11,7 +11,7 @@ class SimpleEventAdapter extends EventAdapter {
   }
 
   override def fromJournal(event: Any, manifest: String): EventSeq = event match {
-    case Tagged(payload, tags) ⇒ EventSeq.single("mapped")
+    case Tagged(payload, tags) ⇒ EventSeq.single(event + "=" + tags)
     case _                     ⇒ EventSeq.single(event)
   }
 }

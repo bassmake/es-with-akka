@@ -151,8 +151,8 @@ readJournal
 - akka is not handling serialization directly
 - do not use java serialization
 - several libraries exists
+- protobuf from Google* |
 - kryo/chill from Twitter |
-- protobuf from Google |
 - avro from Apache |
 
 +++
@@ -167,15 +167,15 @@ class SimpleEventAdapter extends EventAdapter {
   }
 
   override def fromJournal(event: Any, manifest: String): EventSeq = event match {
-    case Tagged(payload, tags) ⇒ EventSeq.single("mapped")
+    case Tagged(payload, tags) ⇒ EventSeq.single(event + "=" + tags)
     case _ ⇒ EventSeq.single(event)
   }
 }
 ```
 @[1,13](extend WriteEventAdapter)
-@[2](a)
-@[4-7](b)
-@[9-12](c)
+@[2](useful for versioning)
+@[4-7](how should be event persisted)
+@[9-12](how to map from persisted form)
 
 ---
 ### Thank you
