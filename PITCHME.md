@@ -147,12 +147,35 @@ readJournal
 ### Coding part 3
 
 ---
-### About Akka serialization
-TODO
+### About Serialization in akka
+- akka is not handling serialization directly
+- do not use java serialization
+- several libraries exists
+- kryo/chill from Twitter |
+- protobuf from Google |
+- avro from Apache |
 
----
++++
 ### Event adapters
-TODO
+```scala
+class SimpleEventAdapter extends EventAdapter {
+  override def manifest(event: Any): String = ""
+
+  override def toJournal(event: Any): Any = event match {
+    case _: String ⇒ Tagged(event, Set("tag"))
+    case _         ⇒ event
+  }
+
+  override def fromJournal(event: Any, manifest: String): EventSeq = event match {
+    case Tagged(payload, tags) ⇒ EventSeq.single("mapped")
+    case _ ⇒ EventSeq.single(event)
+  }
+}
+```
+@[1,13](extend WriteEventAdapter)
+@[2](a)
+@[4-7](b)
+@[9-12](c)
 
 ---
 ### Thank you
