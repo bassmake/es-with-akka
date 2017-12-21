@@ -174,8 +174,8 @@ class SimpleEventAdapter extends EventAdapter {
 ```
 @[1,13](extend WriteEventAdapter)
 @[2](useful for versioning)
-@[4-7](how should be event persisted)
-@[9-12](how to map from persisted form)
+@[4-7](how should be event persisted/serialization)
+@[9-12](how to map from persisted form/deserialization)
 
 ---
 ### Thank you
